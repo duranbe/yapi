@@ -6,16 +6,14 @@ import os
 import gzip
 
 from request.headers import get_headers
+from response.statuses import HTTP_200, HTTP_201, HTTP_404
 from utils import CLRF
 
-HTTP_404 = b"HTTP/1.1 404 Not Found\r\n\r\n"
-HTTP_200 = b"HTTP/1.1 200 OK\r\n\r\n"
-HTTP_201 = b"HTTP/1.1 201 Created\r\n\r\n"
+
 
 
 CONTENT_ENCODING = "Content-Encoding"
 ALLOWED_ENCODING = "gzip" 
-
 
 
 
