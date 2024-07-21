@@ -1,4 +1,3 @@
-
 import socket
 import threading
 import argparse
@@ -10,11 +9,8 @@ from response.statuses import HTTP_200, HTTP_201, HTTP_404
 from utils import CLRF
 
 
-
-
 CONTENT_ENCODING = "Content-Encoding"
-ALLOWED_ENCODING = "gzip" 
-
+ALLOWED_ENCODING = "gzip"
 
 
 def process(sock, addr, doc_paths):
@@ -23,7 +19,7 @@ def process(sock, addr, doc_paths):
     request_line = request.split(CLRF)[0]
     request_type = request_line.split()[0]
     request_endpoint = request_line.split()[1]
-    request_protocol = request_line.split()[2]
+    # request_protocol = request_line.split()[2]
     headers = get_headers(request=request)
     request_body = request.split(CLRF)[-1]
     print(headers)
@@ -31,20 +27,19 @@ def process(sock, addr, doc_paths):
     if request.split(" ")[1] == "/":
         print(HTTP_200)
         sock.send(HTTP_200)
-    
+
     elif "/files/" in request_endpoint:
         filename = request.split(" ")[1].replace("/files/", "")
 
         if request_type == "POST":
             print(filename, request_body)
 
-            if(int(headers['Content-Length']) != len(request_body)):
+            if int(headers["Content-Length"]) != len(request_body):
                 response = HTTP_404
             else:
-                with open(doc_paths+filename, "w") as writer:
+                with open(doc_paths + filename, "w") as writer:
                     writer.write(request_body)
                 response = HTTP_201
-
 
         if request_type == "GET":
             print(filename)
@@ -66,19 +61,20 @@ def process(sock, addr, doc_paths):
         sock.send(response)
 
     elif "/echo/" in request.split(" ")[1]:
-
-
-        
-        if(headers.get('Accept-Encoding') is not None and ALLOWED_ENCODING in headers['Accept-Encoding'].split(", ")):
-
+        if headers.get("Accept-Encoding") is not None and ALLOWED_ENCODING in headers[
+            "Accept-Encoding"
+        ].split(", "):
             url = request.split(" ")[1].split("/")[2].encode()
             print(url)
             body = gzip.compress(url)
-            response = str.encode(
-                "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {}\r\nContent-Encoding: gzip\r\n\r\n".format(
-                    len(body)
+            response = (
+                str.encode(
+                    "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {}\r\nContent-Encoding: gzip\r\n\r\n".format(
+                        len(body)
+                    )
                 )
-            ) + body
+                + body
+            )
         else:
             url = request.split(" ")[1].split("/")[2]
             response = str.encode(
