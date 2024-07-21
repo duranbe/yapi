@@ -98,6 +98,7 @@ def process(sock, addr, doc_paths):
 
 def main():
     parser = argparse.ArgumentParser()
+    parser.add_argument("--port", dest="port", type=int, help="port to run server", default=4221)
     parser.add_argument("--directory", dest="doc_paths", type=str, help="path to doc")
     args = parser.parse_args()
 
@@ -105,7 +106,7 @@ def main():
 
     s = socket.socket()
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
-    server_address = ("localhost", 4221)
+    server_address = ("localhost", args.port)
     s.bind(server_address)
     s.listen()
     while True:
