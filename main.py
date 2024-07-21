@@ -4,12 +4,10 @@ import argparse
 import os
 import gzip
 
-from request.headers import get_headers
+from request.headers import parse_headers
 from response.statuses import HTTP_200, HTTP_201, HTTP_404
 from utils import CLRF
 
-
-CONTENT_ENCODING = "Content-Encoding"
 ALLOWED_ENCODING = "gzip"
 
 
@@ -20,7 +18,7 @@ def process(sock, addr, doc_paths):
     request_type = request_line.split()[0]
     request_endpoint = request_line.split()[1]
     # request_protocol = request_line.split()[2]
-    headers = get_headers(request=request)
+    headers = parse_headers(request=request)
     request_body = request.split(CLRF)[-1]
     print(headers)
     print(request_line, request_endpoint)
