@@ -1,4 +1,4 @@
-from utils import CLRF
+from ..utils import CLRF
 
 
 def parse_headers(request) -> dict:

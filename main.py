@@ -4,25 +4,23 @@ import argparse
 import os
 import gzip
 
-from request.headers import parse_headers
-from response.statuses import HTTP_200, HTTP_201, HTTP_404
-from utils import CLRF
+from src.request.request import Request
+from src.response.statuses import HTTP_200, HTTP_201, HTTP_404
 
 ALLOWED_ENCODING = "gzip"
 
 
 def process(sock, addr, doc_paths):
-    request = sock.recv(4096).decode("utf-8")
-    print(request.split(CLRF))
-    request_line = request.split(CLRF)[0]
-    request_type = request_line.split()[0]
-    request_endpoint = request_line.split()[1]
+    request = Request(sock.recv(4096))
+    print(request, request.method)
+    request_type = request.method
+    request_endpoint = request.endpoint
     # request_protocol = request_line.split()[2]
-    headers = parse_headers(request=request)
-    request_body = request.split(CLRF)[-1]
+    headers = request.headers
+    request_body = request.body
     print(headers)
-    print(request_line, request_endpoint)
-    if request.split(" ")[1] == "/":
+    
+    if request.endpoint == "/":
         print(HTTP_200)
         sock.send(HTTP_200)
 
@@ -101,8 +99,6 @@ def main():
     parser.add_argument("--port", dest="port", type=int, help="port to run server", default=4221)
     parser.add_argument("--directory", dest="doc_paths", type=str, help="path to doc")
     args = parser.parse_args()
-
-    print(args.doc_paths)
 
     s = socket.socket()
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
