@@ -1,3 +1,4 @@
+from src.exceptions.exceptions import ContentLengthNotMatchingException
 from src.response.headers import CONTENT_LENGTH
 from src.utils import CLRF
 
@@ -20,7 +21,10 @@ class Response:
         return self._response.encode()
 
     def _headers(self):
-        if CONTENT_LENGTH not in self.headers and self.body is not None:
+        if CONTENT_LENGTH not in self.headers:
             self.headers[CONTENT_LENGTH] = len(self.body)
+        else:
+            if self.headers[CONTENT_LENGTH] != len(self.body):
+                raise ContentLengthNotMatchingException
 
         return CLRF.join(["{}: {}".format(h, v) for h, v in self.headers.items()])
