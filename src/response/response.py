@@ -1,6 +1,8 @@
 from src.response.headers import CONTENT_LENGTH
 from src.utils import CLRF
 
+HTTP_PROTOCOL = "HTTP/1.1"
+
 
 class Response:
     def __init__(self, status: str, headers: dict, body: str) -> None:
@@ -8,7 +10,7 @@ class Response:
         self.headers = headers
         self.body = body
         self._response = CLRF.join(
-            ["HTTP/1.1 " + status, self._headers(), CLRF, str(self.body)]
+            [HTTP_PROTOCOL + " " + status, self._headers(), CLRF, str(self.body)]
         )
 
     def _send(self):
