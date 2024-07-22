@@ -23,4 +23,4 @@ class Response:
         if CONTENT_LENGTH not in self.headers and self.body is not None:
             self.headers[CONTENT_LENGTH] = len(self.body)
 
-        return CLRF.join(["${}: ${}".format(h, v) for h, v in self.headers.items()])
+        return CLRF.join(["{}: {}".format(h, v) for h, v in self.headers.items()])
