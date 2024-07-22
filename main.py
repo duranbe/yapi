@@ -15,11 +15,10 @@ def process(sock, addr, doc_paths):
     print(request, request.method)
     request_type = request.method
     request_endpoint = request.endpoint
-    # request_protocol = request_line.split()[2]
     headers = request.headers
     request_body = request.body
     print(headers)
-    
+
     if request.endpoint == "/":
         print(HTTP_200)
         sock.send(HTTP_200)
@@ -56,7 +55,7 @@ def process(sock, addr, doc_paths):
             )
         sock.send(response)
 
-    elif "/echo/" in request.split(" ")[1]:
+    elif "/echo/" in request_endpoint:
         if headers.get("Accept-Encoding") is not None and ALLOWED_ENCODING in headers[
             "Accept-Encoding"
         ].split(", "):
@@ -96,7 +95,9 @@ def process(sock, addr, doc_paths):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--port", dest="port", type=int, help="port to run server", default=4221)
+    parser.add_argument(
+        "--port", dest="port", type=int, help="port to run server", default=4221
+    )
     parser.add_argument("--directory", dest="doc_paths", type=str, help="path to doc")
     args = parser.parse_args()
 

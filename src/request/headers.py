@@ -1,6 +1,12 @@
 from ..utils import CLRF
 
 
+ACCEPT_ENCODING = "Accept-Encoding"
+CONTENT_LENGTH = "Content-Length"
+CONTENT_TYPE = "Content-Type"
+USER_AGENT = "User-Agent"
+
+
 def parse_headers(request) -> dict:
     splitted_request = request.split(CLRF)
     headers = {}
