@@ -1,4 +1,7 @@
-HTTP_200 = b"HTTP/1.1 200 OK\r\n\r\n"
-HTTP_201 = b"HTTP/1.1 201 Created\r\n\r\n"
+# 2xx - OK
+HTTP_200 = b"HTTP/1.1 200 OK"
+HTTP_201 = b"HTTP/1.1 201 Created"
 
-HTTP_404 = b"HTTP/1.1 404 Not Found\r\n\r\n"
+
+# 4xx - Client Side Error
+HTTP_404 = b"HTTP/1.1 404 Not Found"

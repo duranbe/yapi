@@ -57,7 +57,7 @@ def process(sock, addr, doc_paths):
         body = "<html><h2>" + request.endpoint.split("/")[2] + "</h2></html>"
         response_headers = {"Content-Type": "text/html; charset=utf-8"}
         response = Response(
-            status="200 OK", headers=response_headers, body=body
+            status=HTTP_200, headers=response_headers, body=body
         )._as_bytes()
 
         sock.send(response)
