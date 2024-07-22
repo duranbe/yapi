@@ -8,7 +8,7 @@ class Response:
     def __init__(self, status: str, headers: dict, body: str) -> None:
         self.status = status
         self.headers = headers
-        self.body = body
+        self.body = "" if body is None else body
         self._response = CLRF.join(
             [HTTP_PROTOCOL + " " + status, self._headers(), CLRF, str(self.body)]
         )

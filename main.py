@@ -8,7 +8,7 @@ from src.request.request import Request
 from src.response.statuses import HTTP_200, HTTP_201, HTTP_404
 
 
-def process(sock, addr, doc_paths):
+def process(sock, addr):
     request = Request(sock.recv(4096))
     print(request, request.method)
     request_type = request.method
@@ -18,8 +18,8 @@ def process(sock, addr, doc_paths):
     print(headers)
 
     if request.endpoint == "/":
-        response = Response(status=HTTP_200, headers={}, body=None)
-        sock.send(HTTP_200)
+        response = Response(status=HTTP_200, headers={}, body=None)._as_bytes()
+        sock.send(response)
 
     elif "/echo/" in request_endpoint:
         body = "<html><h2>" + request.endpoint.split("/")[2] + "</h2></html>"
@@ -30,8 +30,8 @@ def process(sock, addr, doc_paths):
 
         sock.send(response)
     else:
-        response = Response(status=HTTP_404, headers={}, body=None)
-        sock.send(HTTP_404)
+        response = Response(status=HTTP_404, headers={}, body=None)._as_bytes()
+        sock.send(response)
 
     sock.close()
 
@@ -41,7 +41,6 @@ def main():
     parser.add_argument(
         "--port", dest="port", type=int, help="port to run server", default=4221
     )
-    parser.add_argument("--directory", dest="doc_paths", type=str, help="path to doc")
     args = parser.parse_args()
 
     s = socket.socket()
@@ -51,7 +50,7 @@ def main():
     s.listen()
     while True:
         sock, addr = s.accept()  # wait for client
-        t = threading.Thread(target=lambda: process(sock, addr, args.doc_paths))
+        t = threading.Thread(target=lambda: process(sock, addr))
         t.start()
 
 
