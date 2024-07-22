@@ -2,12 +2,10 @@ import socket
 import threading
 import argparse
 import os
-import gzip
 
+from src.response.response import Response
 from src.request.request import Request
 from src.response.statuses import HTTP_200, HTTP_201, HTTP_404
-
-ALLOWED_ENCODING = "gzip"
 
 
 def process(sock, addr, doc_paths):
@@ -56,27 +54,13 @@ def process(sock, addr, doc_paths):
         sock.send(response)
 
     elif "/echo/" in request_endpoint:
-        if headers.get("Accept-Encoding") is not None and ALLOWED_ENCODING in headers[
-            "Accept-Encoding"
-        ].split(", "):
-            url = request.split(" ")[1].split("/")[2].encode()
-            print(url)
-            body = gzip.compress(url)
-            response = (
-                str.encode(
-                    "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {}\r\nContent-Encoding: gzip\r\n\r\n".format(
-                        len(body)
-                    )
-                )
-                + body
-            )
-        else:
-            url = request.split(" ")[1].split("/")[2]
-            response = str.encode(
-                "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {}\r\n\r\n{}".format(
-                    len(url), url
-                )
-            )
+        url = request.endpoint.split("/")[2].encode()
+        print(url)
+        body = url
+        response_headers = {"Content-Type": "text/plain"}
+        response = Response(
+            status="200 OK", headers=response_headers, body=body
+        )._as_bytes()
 
         sock.send(response)
     elif "User-Agent" in headers.keys():
