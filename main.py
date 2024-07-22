@@ -18,40 +18,8 @@ def process(sock, addr, doc_paths):
     print(headers)
 
     if request.endpoint == "/":
-        print(HTTP_200)
+        response = Response(status=HTTP_200, headers={}, body=None)
         sock.send(HTTP_200)
-
-    elif "/files/" in request_endpoint:
-        filename = request.split(" ")[1].replace("/files/", "")
-
-        if request_type == "POST":
-            print(filename, request_body)
-
-            if int(headers["Content-Length"]) != len(request_body):
-                response = HTTP_404
-            else:
-                with open(doc_paths + filename, "w") as writer:
-                    writer.write(request_body)
-                response = HTTP_201
-
-        if request_type == "GET":
-            print(filename)
-            data = ""
-            if not os.path.isfile(doc_paths + filename):
-                sock.send(HTTP_404)
-
-            with open(doc_paths + filename, "r") as reader:
-                line = reader.readline()
-                while line != "":  # The EOF char is an empty string
-                    data += line
-                    line = reader.readline()
-
-            response = str.encode(
-                "HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: {}\r\n\r\n{}".format(
-                    len(data), data
-                )
-            )
-        sock.send(response)
 
     elif "/echo/" in request_endpoint:
         body = "<html><h2>" + request.endpoint.split("/")[2] + "</h2></html>"
@@ -61,15 +29,8 @@ def process(sock, addr, doc_paths):
         )._as_bytes()
 
         sock.send(response)
-    elif "User-Agent" in headers.keys():
-        data = headers["User-Agent"]
-        response = str.encode(
-            "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {}\r\n\r\n{}".format(
-                len(data), data
-            )
-        )
-        sock.send(response)
     else:
+        response = Response(status=HTTP_404, headers={}, body=None)
         sock.send(HTTP_404)
 
     sock.close()
