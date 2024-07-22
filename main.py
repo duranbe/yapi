@@ -54,10 +54,8 @@ def process(sock, addr, doc_paths):
         sock.send(response)
 
     elif "/echo/" in request_endpoint:
-        url = request.endpoint.split("/")[2].encode()
-        print(url)
-        body = url
-        response_headers = {"Content-Type": "text/plain"}
+        body = "<html><h2>" + request.endpoint.split("/")[2] + "</h2></html>"
+        response_headers = {"Content-Type": "text/html; charset=utf-8"}
         response = Response(
             status="200 OK", headers=response_headers, body=body
         )._as_bytes()
