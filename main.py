@@ -1,20 +1,17 @@
 import socket
 import threading
 import argparse
-import os
 
 from src.response.response import Response
 from src.request.request import Request
-from src.response.statuses import HTTP_200, HTTP_201, HTTP_404
+from src.response.statuses import HTTP_200, HTTP_404
 
 
 def process(sock, addr):
     request = Request(sock.recv(4096))
     print(request, request.method)
-    request_type = request.method
     request_endpoint = request.endpoint
     headers = request.headers
-    request_body = request.body
     print(headers)
 
     if request.endpoint == "/":
