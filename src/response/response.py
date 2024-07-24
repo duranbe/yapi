@@ -14,9 +14,6 @@ class Response:
             [HTTP_PROTOCOL + " " + status, self._headers(), CLRF, str(self.body)]
         )
 
-    def _send(self):
-        pass
-
     def _as_bytes(self):
         return self._response.encode()
 

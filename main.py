@@ -8,10 +8,8 @@ from src.response.statuses import HTTP_200, HTTP_404
 
 def process(sock, addr):
     request = Request(sock.recv(4096))
-    print(request, request.method)
+    print(request.method, request.endpoint)
     request_endpoint = request.endpoint
-    headers = request.headers
-    print(headers)
 
     if request.endpoint == "/":
         response = Response(status=HTTP_200, headers={}, body=None)._as_bytes()
@@ -32,15 +30,11 @@ def process(sock, addr):
     sock.close()
 
 
-def main():
+if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--port", dest="port", type=int, help="port to run server", default=4221
     )
     args = parser.parse_args()
 
-    server = Server("localhost", args.port, process=process)
-
-
-if __name__ == "__main__":
-    main()
+    Server("localhost", args.port, process=process)
