@@ -1,5 +1,3 @@
-import socket
-import threading
 import argparse
 
 from src.response.response import Response

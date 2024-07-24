@@ -1,6 +1,7 @@
 import unittest
 
 from src.exceptions.exceptions import ContentLengthNotMatchingException
+from src.response.json_response import JsonResponse
 from src.response.response import Response
 
 
@@ -20,6 +21,15 @@ class TestResponse(unittest.TestCase):
             {"Content-Length": 0},
             "test",
         )
+
+
+class TestJsonResponse(unittest.TestCase):
+    def test_make_json_response(self):
+        response = JsonResponse(status="200 OK", headers={}, body='{"test":"test"}')
+
+        self.assertIn("Content-Type", response.headers)
+
+        self.assertEqual("application/json", response.headers["Content-Type"])
 
 
 if __name__ == "__main__":
