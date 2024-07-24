@@ -1,5 +1,6 @@
 import argparse
 
+from src.response.html_response import HtmlResponse
 from src.response.response import Response
 from src.request.request import Request
 from src.server.server import Server
@@ -17,11 +18,7 @@ def process(sock, addr):
 
     elif "/echo/" in request_endpoint:
         body = "<html><h2>" + request.endpoint.split("/")[2] + "</h2></html>"
-        response_headers = {"Content-Type": "text/html; charset=utf-8"}
-        response = Response(
-            status=HTTP_200, headers=response_headers, body=body
-        )._as_bytes()
-
+        response = HtmlResponse(status=HTTP_200, headers={}, body=body)._as_bytes()
         sock.send(response)
     else:
         response = Response(status=HTTP_404, headers={}, body=None)._as_bytes()

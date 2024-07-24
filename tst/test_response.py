@@ -1,6 +1,7 @@
 import unittest
 
 from src.exceptions.exceptions import ContentLengthNotMatchingException
+from src.response.html_response import HtmlResponse
 from src.response.json_response import JsonResponse
 from src.response.response import Response
 
@@ -29,14 +30,25 @@ class TestResponse(YapiTestCase):
 
 
 class TestJsonResponse(YapiTestCase):
-    def test_make_json_response(self):
+    def test_json_response_has_correct_headers(self):
         response = JsonResponse(status="200 OK", headers={}, body='{"test":"test"}')
 
         self.assertIn("Content-Type", response.headers)
         self.assertIn("Content-Length", response.headers)
 
         self.assertEqual("application/json", response.headers["Content-Type"])
-        self.assertEqual(15, response.headers['Content-Length'])
+        self.assertEqual(15, response.headers["Content-Length"])
+
+
+class TestHtmlResponse(YapiTestCase):
+    def test_html_response_has_correct_headers(self):
+        response = HtmlResponse(status="200 OK", headers={}, body="<html>test</html>")
+
+        self.assertIn("Content-Type", response.headers)
+        self.assertIn("Content-Length", response.headers)
+
+        self.assertEqual("text/html; charset=utf-8", response.headers["Content-Type"])
+        self.assertEqual(17, response.headers["Content-Length"])
 
 
 if __name__ == "__main__":
