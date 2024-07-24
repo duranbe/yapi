@@ -5,7 +5,12 @@ from src.response.json_response import JsonResponse
 from src.response.response import Response
 
 
-class TestResponse(unittest.TestCase):
+class YapiTestCase(unittest.TestCase):
+    def setUp(self) -> None:
+        print("\n", unittest.TestCase.id(self))
+
+
+class TestResponse(YapiTestCase):
     def test_make_response(self):
         response = Response(status="200 OK", headers={}, body="sample body text")
         expected_response = (
@@ -23,7 +28,7 @@ class TestResponse(unittest.TestCase):
         )
 
 
-class TestJsonResponse(unittest.TestCase):
+class TestJsonResponse(YapiTestCase):
     def test_make_json_response(self):
         response = JsonResponse(status="200 OK", headers={}, body='{"test":"test"}')
 
