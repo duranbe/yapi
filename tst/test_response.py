@@ -33,8 +33,10 @@ class TestJsonResponse(YapiTestCase):
         response = JsonResponse(status="200 OK", headers={}, body='{"test":"test"}')
 
         self.assertIn("Content-Type", response.headers)
+        self.assertIn("Content-Length", response.headers)
 
         self.assertEqual("application/json", response.headers["Content-Type"])
+        self.assertEqual(15, response.headers['Content-Length'])
 
 
 if __name__ == "__main__":
