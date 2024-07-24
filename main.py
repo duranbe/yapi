@@ -4,6 +4,7 @@ import argparse
 
 from src.response.response import Response
 from src.request.request import Request
+from src.server.server import Server
 from src.response.statuses import HTTP_200, HTTP_404
 
 
@@ -40,15 +41,7 @@ def main():
     )
     args = parser.parse_args()
 
-    s = socket.socket()
-    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
-    server_address = ("localhost", args.port)
-    s.bind(server_address)
-    s.listen()
-    while True:
-        sock, addr = s.accept()  # wait for client
-        t = threading.Thread(target=lambda: process(sock, addr))
-        t.start()
+    server = Server("localhost", args.port, process=process)
 
 
 if __name__ == "__main__":
