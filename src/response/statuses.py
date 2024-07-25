@@ -4,4 +4,6 @@ HTTP_201 = "201 Created"
 
 
 # 4xx - Client Side Error
+HTTP_400 = "400 Bad Request"
+HTTP_401 = "401 Unauthorized"
 HTTP_404 = "404 Not Found"
