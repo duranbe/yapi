@@ -4,11 +4,7 @@ from src.exceptions.exceptions import ContentLengthNotMatchingException
 from src.response.html_response import HtmlResponse
 from src.response.json_response import JsonResponse
 from src.response.response import Response
-
-
-class YapiTestCase(unittest.TestCase):
-    def setUp(self) -> None:
-        print("\n", unittest.TestCase.id(self))
+from tst.setup import YapiTestCase
 
 
 class TestResponse(YapiTestCase):
