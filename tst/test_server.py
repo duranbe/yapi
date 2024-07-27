@@ -14,7 +14,7 @@ class TestServer(YapiTestCase):
         logging.info("Sample Server started with pid : %d", self.process.pid)
 
     def test_simple_connectivity_check(self):
-        url = "http://localhost:4221"
+        url = "http://localhost:4221/test"
         with urlopen(url) as response:
             self.assertEqual(response.getcode(), 200)
             self.assertInUrllibHeaders("Content-Length", response.info()._headers)

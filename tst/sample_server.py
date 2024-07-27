@@ -2,12 +2,14 @@ from src.response import Response
 from src.response.statuses import HTTP_200
 from src.server import Server
 
+server = Server("localhost", 4221)
 
-def process(sock, addr):
+
+@server.endpoint("/test")
+def print_value():
     response = Response(status=HTTP_200, headers={}, body="test")._as_bytes()
-    sock.send(response)
-    sock.close()
+    return response
 
 
 if __name__ == "__main__":
-    Server("localhost", 4221, process=process)
+    server.run()
