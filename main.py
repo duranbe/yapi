@@ -1,9 +1,9 @@
 import argparse
 
-from src.response.html_response import HtmlResponse
-from src.response.response import Response
-from src.request.request import Request
-from src.server.server import Server
+from src.response import HtmlResponse
+from src.response import Response
+from src.request import Request
+from src.server import Server
 from src.response.statuses import HTTP_200, HTTP_404
 
 

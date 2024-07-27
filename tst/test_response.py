@@ -1,9 +1,9 @@
 import unittest
 
 from src.exceptions.exceptions import ContentLengthNotMatchingException
-from src.response.html_response import HtmlResponse
-from src.response.json_response import JsonResponse
-from src.response.response import Response
+from src.response import HtmlResponse
+from src.response import JsonResponse
+from src.response import Response
 from tst.setup import YapiTestCase
 
 

@@ -1,6 +1,6 @@
-from src.response.response import Response
+from src.response import Response
 from src.response.statuses import HTTP_200
-from src.server.server import Server
+from src.server import Server
 
 
 def process(sock, addr):
