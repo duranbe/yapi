@@ -8,7 +8,7 @@ class TestServer(YapiTestCase):
         self.process = Popen(["python3", "-m", "tst.sample_server"])
 
     def test_simple_connectivity_check(self):
-        url = "http://localhost:4221"
+        url = "http://127.0.0.1:4221"
 
         with urlopen(url) as response:
             self.assertEqual(response.getcode(), 200)
