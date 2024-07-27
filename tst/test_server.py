@@ -17,6 +17,7 @@ class TestServer(YapiTestCase):
         url = "http://localhost:4221"
         with urlopen(url) as response:
             self.assertEqual(response.getcode(), 200)
+            self.assertInUrllibHeaders("Content-Length", response.info()._headers)
             self.assertEqual(response.read().decode(), "test")
 
     def tearDown(self):
