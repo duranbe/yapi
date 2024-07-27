@@ -10,4 +10,4 @@ def process(sock, addr):
 
 
 if __name__ == "__main__":
-    Server("localhost", 4221, process=process)
+    Server("127.0.0.1", 4221, process=process)
