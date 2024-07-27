@@ -10,8 +10,15 @@ class Response:
         self.status = status
         self.headers = headers
         self.body = "" if body is None else body
-        self._response = CLRF.join(
-            [HTTP_PROTOCOL + " " + status, self._headers(), CLRF, str(self.body)]
+        self._response = "".join(
+            [
+                HTTP_PROTOCOL + " " + status,
+                CLRF,
+                self._headers(),
+                CLRF,
+                CLRF,
+                str(self.body),
+            ]
         )
 
     def _as_bytes(self):
