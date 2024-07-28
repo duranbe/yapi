@@ -1,8 +1,8 @@
 import socket
 import threading
 
-from src.request.request import Request
-from src.response.response import Response
+from src.request import Request
+from src.response import Response
 from src.response.statuses import HTTP_404
 
 
