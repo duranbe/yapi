@@ -13,7 +13,7 @@ class Request:
         self.endpoint = _request_line[1]
         self.protocol = _request_line[2]
 
-    def _parse_headers(request) -> dict:
+    def _parse_headers(self, request) -> dict:
         splitted_request = request.split(CLRF)
         headers = {}
         for i in range(1, len(splitted_request) - 2):
