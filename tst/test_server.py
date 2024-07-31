@@ -1,3 +1,4 @@
+from urllib.error import HTTPError
 from tst.setup import YapiTestCase
 from urllib.request import urlopen
 from subprocess import Popen
@@ -19,6 +20,13 @@ class TestServer(YapiTestCase):
             self.assertEqual(response.getcode(), 200)
             self.assertInUrllibHeaders("Content-Length", response.info()._headers)
             self.assertEqual(response.read().decode(), "test")
+
+    def test_404_not_found(self):
+        url = "http://localhost:4221/doesnotexist"
+       
+        with self.assertRaises(HTTPError) as error:
+            urlopen(url)
+        self.assertEqual("HTTP Error 404: Not Found", str(error.exception))
 
     def tearDown(self):
         self.process.kill()
