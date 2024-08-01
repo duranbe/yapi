@@ -27,7 +27,7 @@ class Response:
     def _headers(self):
         if CONTENT_LENGTH not in self.headers:
             self.headers[CONTENT_LENGTH] = len(self.body)
-        
+
         self._assert_content_length()
 
         return CLRF.join(["{}: {}".format(h, v) for h, v in self.headers.items()])
@@ -35,4 +35,3 @@ class Response:
     def _assert_content_length(self):
         if self.headers[CONTENT_LENGTH] != len(self.body):
             raise ContentLengthNotMatchingException
-        

@@ -39,7 +39,7 @@ class Server:
             if request.endpoint not in self.address_function_map:
                 sock.send(Response(HTTP_404, {}, None)._as_bytes())
                 sock.close()
-                return
+                continue
 
             url_mapping = self.address_function_map[request.endpoint]
 
@@ -49,7 +49,7 @@ class Server:
                     Response(HTTP_405, {"Allow": allow_headers}, None)._as_bytes()
                 )
                 sock.close()
-                return
+                continue
 
             to_execute = url_mapping["function"]
             threading.Thread(target=lambda: to_execute(sock, request)).start()

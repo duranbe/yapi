@@ -28,6 +28,13 @@ class TestServer(YapiTestCase):
             urlopen(url)
         self.assertEqual("HTTP Error 404: Not Found", str(error.exception))
 
+        url = "http://localhost:4221/test"
+
+        with urlopen(url) as response:
+            self.assertEqual(response.getcode(), 200)
+            self.assertInUrllibHeaders("Content-Length", response.info()._headers)
+            self.assertEqual(response.read().decode(), "test")
+
     def test_405_not_found(self):
         url = "http://localhost:4221/test"
 
