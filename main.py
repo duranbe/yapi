@@ -13,7 +13,7 @@ args = parser.parse_args()
 server = Server("localhost", args.port)
 
 
-@server.endpoint("/test")
+@server.endpoint(path="/test", allowed_methods=["GET"])
 def test_endpoint():
     response = Response(status=HTTP_200, headers={}, body=None)._as_bytes()
     return response

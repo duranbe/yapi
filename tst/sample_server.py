@@ -5,7 +5,7 @@ from src.server import Server
 server = Server("localhost", 4221)
 
 
-@server.endpoint("/test")
+@server.endpoint("/test", allowed_methods=["GET"])
 def print_value():
     response = Response(status=HTTP_200, headers={}, body="test")._as_bytes()
     return response

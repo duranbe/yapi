@@ -3,7 +3,7 @@ import threading
 
 from src.request import Request
 from src.response import Response
-from src.response.statuses import HTTP_404
+from src.response.statuses import HTTP_404, HTTP_405
 
 
 class Server:
@@ -16,14 +16,17 @@ class Server:
         self.socket.bind(server_address)
         self.socket.listen()
 
-    def endpoint(self, path):
+    def endpoint(self, path, allowed_methods):
         def decorator(func):
             def wrapper(sock, request):
                 sock.send(func())
                 sock.close()
                 return
 
-            self.address_function_map[path] = wrapper
+            self.address_function_map[path] = {
+                "function": wrapper,
+                "allowed_methods": allowed_methods,
+            }
 
             return wrapper
 
@@ -36,7 +39,17 @@ class Server:
             if request.endpoint not in self.address_function_map:
                 sock.send(Response(HTTP_404, {}, None)._as_bytes())
                 sock.close()
-            else:
-                to_execute = self.address_function_map[request.endpoint]
-                t = threading.Thread(target=lambda: to_execute(sock, request))
-                t.start()
+                return
+
+            url_mapping = self.address_function_map[request.endpoint]
+
+            if request.method not in url_mapping["allowed_methods"]:
+                allow_headers = ",".join(url_mapping["allowed_methods"])
+                sock.send(
+                    Response(HTTP_405, {"Allow": allow_headers}, None)._as_bytes()
+                )
+                sock.close()
+                return
+
+            to_execute = url_mapping["function"]
+            threading.Thread(target=lambda: to_execute(sock, request)).start()

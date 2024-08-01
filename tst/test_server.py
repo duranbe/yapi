@@ -23,10 +23,17 @@ class TestServer(YapiTestCase):
 
     def test_404_not_found(self):
         url = "http://localhost:4221/doesnotexist"
-       
+
         with self.assertRaises(HTTPError) as error:
             urlopen(url)
         self.assertEqual("HTTP Error 404: Not Found", str(error.exception))
+
+    def test_405_not_found(self):
+        url = "http://localhost:4221/test"
+
+        with self.assertRaises(HTTPError) as error:
+            urlopen(url, data=b"test")
+        self.assertEqual("HTTP Error 405: Method Not Allowed", str(error.exception))
 
     def tearDown(self):
         self.process.kill()
