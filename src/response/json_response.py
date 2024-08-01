@@ -13,8 +13,7 @@ class JsonResponse(Response):
             self.headers[CONTENT_TYPE] = "application/json"
         if CONTENT_LENGTH not in self.headers:
             self.headers[CONTENT_LENGTH] = len(self.body)
-        else:
-            if self.headers[CONTENT_LENGTH] != len(self.body):
-                raise ContentLengthNotMatchingException
+        
+        self._assert_content_length()
 
         return CLRF.join(["{}: {}".format(h, v) for h, v in self.headers.items()])
