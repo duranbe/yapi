@@ -7,8 +7,7 @@ server = Server("localhost", 4221)
 
 @server.endpoint("/test", allowed_methods=["GET"])
 def print_value():
-    response = Response(status=HTTP_200, headers={}, body="test")._as_bytes()
-    return response
+    return Response(status=HTTP_200, headers={}, body="test")
 
 
 if __name__ == "__main__":

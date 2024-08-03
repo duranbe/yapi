@@ -15,8 +15,7 @@ server = Server("localhost", args.port)
 
 @server.endpoint(path="/test", allowed_methods=["GET"])
 def test_endpoint():
-    response = Response(status=HTTP_200, headers={}, body=None)._as_bytes()
-    return response
+    return Response(status=HTTP_200, headers={}, body=None)
 
 
 if __name__ == "__main__":

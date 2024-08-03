@@ -19,7 +19,8 @@ class Server:
     def endpoint(self, path, allowed_methods):
         def decorator(func):
             def wrapper(sock, request):
-                sock.send(func())
+                response = func()._as_bytes()
+                sock.send(response)
                 sock.close()
                 return
 
