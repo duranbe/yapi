@@ -24,7 +24,7 @@ Declare an endpoint and return a standard Response, an HTMlResponse or JsonRespo
 ```python
 @server.endpoint(path="/test", allowed_methods=["GET"])
 def test_endpoint():
-    response = Response(status=HTTP_200, headers={}, body=None)._as_bytes()
+    response = Response(status=HTTP_200, headers={}, body=None)
     return response
 ```
 
