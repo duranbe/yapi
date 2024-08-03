@@ -42,6 +42,14 @@ class TestServer(YapiTestCase):
             urlopen(url, data=b"test")
         self.assertEqual("HTTP Error 405: Method Not Allowed", str(error.exception))
 
+    def test_json(self):
+        url = "http://localhost:4221/test_json"
+        with urlopen(url) as response:
+            self.assertEqual(response.getcode(), 200)
+            self.assertInUrllibHeaders("Content-Type", response.info()._headers)
+            self.assertInUrllibHeaders("Content-Length", response.info()._headers)
+            self.assertEqual(response.read().decode(), '{"test": "json"}')
+
     def tearDown(self):
         self.process.kill()
         self.process.wait()
