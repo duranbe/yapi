@@ -34,3 +34,31 @@ Finally run it !
 if __name__ == "__main__":
     server.run()
 ```
+
+Full example 
+
+```python
+import argparse
+
+from src.response import Response
+from src.server import Server
+from src.response.statuses import HTTP_200
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--domain", dest="domain", type=str, help="domain to run server", default="localhost")
+parser.add_argument("--port", dest="port", type=int, help="port to run server", default=4221)
+args = parser.parse_args()
+
+server = Server(args.domain, args.port)
+
+@server.endpoint(path="/test", allowed_methods=["GET"])
+def test_endpoint():
+    return Response(status=HTTP_200, headers={}, body="Hello World!")
+
+
+if __name__ == "__main__":
+    server.run()
+
+```
+
+Test it with ```curl http://localhost:4221/test -i ```
