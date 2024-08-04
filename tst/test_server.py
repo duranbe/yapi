@@ -10,6 +10,7 @@ SERVER_START_WAIT_TIME = 0.1
 
 class TestServer(YapiTestCase):
     def setUp(self) -> None:
+        super().setUp()
         self.process = Popen(["python3", "-m", "tst.sample_server"])
         time.sleep(SERVER_START_WAIT_TIME)
         logging.info("Sample Server started with pid : %d", self.process.pid)
@@ -49,6 +50,14 @@ class TestServer(YapiTestCase):
             self.assertInUrllibHeaders("Content-Type", response.info()._headers)
             self.assertInUrllibHeaders("Content-Length", response.info()._headers)
             self.assertEqual(response.read().decode(), '{"test": "json"}')
+
+    def test_html(self):
+        url = "http://localhost:4221/test_html"
+        with urlopen(url) as response:
+            self.assertEqual(response.getcode(), 200)
+            self.assertInUrllibHeaders("Content-Type", response.info()._headers)
+            self.assertInUrllibHeaders("Content-Length", response.info()._headers)
+            self.assertEqual(response.read().decode(),"<html>test</html>")
 
     def tearDown(self):
         self.process.kill()
