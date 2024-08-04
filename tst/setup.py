@@ -8,7 +8,7 @@ class YapiTestCase(unittest.TestCase):
         logging.basicConfig(level=logging.INFO)
         logging.getLogger().setLevel(logging.INFO)
         logging.getLogger().handlers[0].setFormatter(
-            logging.Formatter("\n%(levelname)s:%(message)s")
+            logging.Formatter("\n TEST:%(levelname)s: %(message)s")
         )
         current_test = unittest.TestCase.id(self)
         test_name = re.sub(r"^.*?\.", "", current_test)

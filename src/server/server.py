@@ -1,5 +1,6 @@
 import socket
 import threading
+import logging
 
 from src.request import Request
 from src.response import Response
@@ -10,9 +11,14 @@ class Server:
     def __init__(self, hostname: str, port: int) -> None:
         self.address_function_map = {}
         self.socket = socket.socket()
+        logging.basicConfig(level=logging.INFO)
+        logging.getLogger().setLevel(logging.INFO)
+        logging.getLogger().handlers[0].setFormatter(
+            logging.Formatter("\n"+hostname + ":"+str(port)+" %(message)s")
+        )
 
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
-        server_address = ("localhost", port)
+        server_address = (hostname, port)
         self.socket.bind(server_address)
         self.socket.listen()
 
@@ -37,10 +43,13 @@ class Server:
         while True:
             sock, addr = self.socket.accept()
             request = Request(sock.recv(4096))
+
+            logging.info(f"{request.method} {request.endpoint}")
             if request.endpoint not in self.address_function_map:
                 sock.send(Response(HTTP_404, {}, None)._as_bytes())
                 sock.close()
                 continue
+
 
             url_mapping = self.address_function_map[request.endpoint]
 
