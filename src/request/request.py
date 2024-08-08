@@ -9,9 +9,9 @@ class Request:
         self.headers = self._parse_headers(request)
         self.body = request.split(CLRF)[-1]
 
-        self.method = _request_line[0]
-        self.endpoint = _request_line[1]
-        self.protocol = _request_line[2]
+        self.method: str = _request_line[0]
+        self.endpoint: str = _request_line[1]
+        self.protocol: str = _request_line[2]
 
     def _parse_headers(self, request) -> dict:
         splitted_request = request.split(CLRF)

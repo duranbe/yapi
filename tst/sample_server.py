@@ -9,16 +9,24 @@ server = Server("localhost", 4221)
 
 
 @server.endpoint("/test", allowed_methods=["GET"])
-def print_value():
+def endpoint():
     return Response(status=HTTP_200, headers={}, body="test")
 
+
+@server.endpoint("/echo/<value1>/", allowed_methods=["GET"])
+def echo_value(value1):
+    return Response(status=HTTP_200, headers={}, body=value1)
+
+
 @server.endpoint("/test_json", allowed_methods=["GET"])
-def print_value_json():
+def json_endpoint():
     return JsonResponse(status=HTTP_200, headers={}, body=json.dumps({"test": "json"}))
 
+
 @server.endpoint("/test_html", allowed_methods=["GET"])
-def print_value_html():
+def html_endpoint():
     return HtmlResponse(status=HTTP_200, headers={}, body="<html>test</html>")
+
 
 if __name__ == "__main__":
     server.run()

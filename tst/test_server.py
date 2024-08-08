@@ -22,6 +22,13 @@ class TestServer(YapiTestCase):
             self.assertInUrllibHeaders("Content-Length", response.info()._headers)
             self.assertEqual(response.read().decode(), "test")
 
+    def test_echo_check(self):
+        url = "http://localhost:4221/echo/test/test"
+        with urlopen(url) as response:
+            self.assertEqual(response.getcode(), 200)
+            self.assertInUrllibHeaders("Content-Length", response.info()._headers)
+            self.assertEqual(response.read().decode(), "test")
+
     def test_404_not_found(self):
         url = "http://localhost:4221/doesnotexist"
 
@@ -57,7 +64,7 @@ class TestServer(YapiTestCase):
             self.assertEqual(response.getcode(), 200)
             self.assertInUrllibHeaders("Content-Type", response.info()._headers)
             self.assertInUrllibHeaders("Content-Length", response.info()._headers)
-            self.assertEqual(response.read().decode(),"<html>test</html>")
+            self.assertEqual(response.read().decode(), "<html>test</html>")
 
     def tearDown(self):
         self.process.kill()
