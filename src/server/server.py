@@ -71,12 +71,10 @@ class Server:
 
                     to_execute = url_mapping["function"]
 
-                    def f(sock, request):
-                        response = to_execute(**params_mapping)
-                        sock.send(response._as_bytes())
-                        sock.close()
-
-                    threading.Thread(target=lambda: f(sock, request)).start()
+                    target_function = self._define_wrapper(
+                        to_execute, sock=sock, request=request, params=params_mapping
+                    )
+                    threading.Thread(target=target_function).start()
                     return
 
             if request.endpoint not in self.address_function_map:
@@ -91,13 +89,10 @@ class Server:
             )
 
             to_execute = url_mapping["function"]
-
-            def f(sock, request):
-                response = to_execute()
-                sock.send(response._as_bytes())
-                sock.close()
-
-            threading.Thread(target=lambda: f(sock, request)).start()
+            target_function = self._define_wrapper(
+                to_execute, sock=sock, request=request, params=None
+            )
+            threading.Thread(target=target_function).start()
 
     def _allowed_methods_check(
         self, sock: socket, method: str, allowed_method: list[str]
@@ -107,3 +102,15 @@ class Server:
             sock.send(Response(HTTP_405, {"Allow": allow_headers}, None)._as_bytes())
             sock.close()
             raise Exception("no method supported")
+
+    def _define_wrapper(self, function_to_execute, sock, request, params):
+        def f(sock, request):
+            if params:
+                response = function_to_execute(**params)
+
+            else:
+                response = function_to_execute()
+            sock.send(response._as_bytes())
+            sock.close()
+
+        return lambda: f(sock=sock, request=request)

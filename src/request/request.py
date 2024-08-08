@@ -3,7 +3,7 @@ from src.utils import CLRF
 
 class Request:
     def __init__(self, request: bytes) -> None:
-        request = request.decode("utf-8")
+        request: str = request.decode("utf-8")
 
         _request_line = request.split(CLRF)[0].split()
         self.headers = self._parse_headers(request)
