@@ -25,17 +25,18 @@ class Server:
         self.socket.listen()
 
         self.url_matcher = re.compile(r"(<\w+>)+")
+        self.url_replacer = re.compile(r"(<\w+>)")
 
     def endpoint(self, path, allowed_methods):
-        def decorator(func):
+        def decorator(function):
             def wrapper(**kwargs):
-                return func(**kwargs)
+                return function(**kwargs)
 
             parameters = self.url_matcher.findall(path)
 
             if parameters:
                 params = [p.strip("<>") for p in parameters]
-                regex_endpoint = re.sub(r"(<\w+>)", "(\\\w+)", path)
+                regex_endpoint = self.url_replacer.sub( "(\\\w+)", path)
 
                 self.regex_function_map[re.compile(regex_endpoint)] = {
                     "function": wrapper,
@@ -65,14 +66,16 @@ class Server:
                     values = compiled_regex.search(request.endpoint).groups()
                     url_mapping = self.regex_function_map[compiled_regex]
 
-                    params_mapping = {}
-                    for k, v in zip(url_mapping["params"], values):
-                        params_mapping[k] = v
+                    params_mapping = {
+                        k: v for k, v in zip(url_mapping["params"], values)
+                    }
 
-                    to_execute = url_mapping["function"]
-
+                    function_to_execute = url_mapping["function"]
                     target_function = self._define_wrapper(
-                        to_execute, sock=sock, request=request, params=params_mapping
+                        function_to_execute=function_to_execute,
+                        sock=sock,
+                        request=request,
+                        params=params_mapping,
                     )
                     threading.Thread(target=target_function).start()
                     return
@@ -87,10 +90,12 @@ class Server:
             self._allowed_methods_check(
                 sock, request.method, url_mapping["allowed_methods"]
             )
-
-            to_execute = url_mapping["function"]
+            function_to_execute = url_mapping["function"]
             target_function = self._define_wrapper(
-                to_execute, sock=sock, request=request, params=None
+                function_to_execute=function_to_execute,
+                sock=sock,
+                request=request,
+                params=None,
             )
             threading.Thread(target=target_function).start()
 
@@ -101,13 +106,14 @@ class Server:
             allow_headers = ",".join(allowed_method)
             sock.send(Response(HTTP_405, {"Allow": allow_headers}, None)._as_bytes())
             sock.close()
-            raise Exception("no method supported")
+            raise Exception(
+                f"Method {method} is not allowed. Allowed methods are {allowed_method}"
+            )
 
     def _define_wrapper(self, function_to_execute, sock, request, params):
         def f(sock, request):
             if params:
                 response = function_to_execute(**params)
-
             else:
                 response = function_to_execute()
             sock.send(response._as_bytes())
