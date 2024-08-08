@@ -20,7 +20,7 @@ Create a server object, with domain and port
 server = Server("localhost", 1337)
 ```
 
-Declare an endpoint and return a standard Response, an HTMlResponse or JsonResponse
+Declare an endpoint and return a standard Response, an HTMLResponse or JsonResponse
 ```python
 @server.endpoint(path="/test", allowed_methods=["GET"])
 def test_endpoint():
