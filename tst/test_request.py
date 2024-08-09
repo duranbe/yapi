@@ -32,12 +32,11 @@ class TestRequest(YapiTestCase):
         request = Request(request_data)
         self.assertEqual(request.method, "GET")
         self.assertEqual(request.endpoint, "/test?a=b&c=d")
-        self.assertDictEqual(request.query_params, {'a':'b', 'c':'d'})
+        self.assertDictEqual(request.query_params, {"a": "b", "c": "d"})
 
     def test_request_parse_query_params_missing_parameters(self):
         request_data = b"GET /test?a=b&c= HTTP/1.1\r\nAccept-Encoding: gzip\r\n\r\n"
         request = Request(request_data)
         self.assertEqual(request.method, "GET")
         self.assertEqual(request.endpoint, "/test?a=b&c=")
-        self.assertDictEqual(request.query_params, {'a':'b'})
-      
+        self.assertDictEqual(request.query_params, {"a": "b"})

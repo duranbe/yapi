@@ -1,6 +1,7 @@
 from src.utils import CLRF
 import re
 
+
 class Request:
     def __init__(self, request: bytes) -> None:
         request: str = request.decode("utf-8")
@@ -26,7 +27,7 @@ class Request:
             headers[header_name] = header_value
 
         return headers
-    
+
     def _parse_query_params(self):
         results = self.query_params_regex.findall(self.endpoint)
-        return {k:v for k,v in results}
+        return {k: v for k, v in results}
