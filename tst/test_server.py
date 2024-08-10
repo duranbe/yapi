@@ -66,6 +66,12 @@ class TestServer(YapiTestCase):
             self.assertInUrllibHeaders("Content-Length", response.info()._headers)
             self.assertEqual(response.read().decode(), "<html>test</html>")
 
+    def test_query_params(self):
+        url = "http://localhost:4221/query_params?a=b&c=d"
+        with urlopen(url) as response:
+            self.assertEqual(response.getcode(), 200)
+            self.assertEqual(response.read().decode(), "{'a': 'b', 'c': 'd'}")
+
     def tearDown(self):
         self.process.kill()
         self.process.wait()

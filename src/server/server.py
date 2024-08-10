@@ -29,8 +29,8 @@ class Server:
 
     def endpoint(self, path, allowed_methods):
         def decorator(function):
-            def wrapper(**kwargs):
-                return function(**kwargs)
+            def wrapper(request, **kwargs):
+                return function(request, **kwargs)
 
             parameters = self.url_matcher.findall(path)
 
@@ -42,12 +42,14 @@ class Server:
                     "function": wrapper,
                     "allowed_methods": allowed_methods,
                     "params": params,
+                    "original_path": path,
                 }
 
             else:
                 self.address_function_map[path] = {
                     "function": wrapper,
                     "allowed_methods": allowed_methods,
+                    "original_path": path,
                 }
 
             return wrapper
@@ -113,9 +115,9 @@ class Server:
     def _define_wrapper(self, function_to_execute, sock, request, params):
         def f(sock, request):
             if params:
-                response = function_to_execute(**params)
+                response = function_to_execute(request, **params)
             else:
-                response = function_to_execute()
+                response = function_to_execute(request)
             sock.send(response._as_bytes())
             sock.close()
 
