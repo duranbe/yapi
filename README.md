@@ -23,7 +23,7 @@ server = Server("localhost", 1337)
 Declare an endpoint and return a standard Response, an HTMLResponse or JsonResponse
 ```python
 @server.endpoint(path="/test", allowed_methods=["GET"])
-def test_endpoint():
+def test_endpoint(request: Request):
     response = Response(status=HTTP_200, headers={}, body=None)
     return response
 ```
@@ -41,6 +41,7 @@ Full example
 import argparse
 
 from src.response import Response
+from src.request import Request
 from src.server import Server
 from src.response.statuses import HTTP_200
 
@@ -52,7 +53,7 @@ args = parser.parse_args()
 server = Server(args.domain, args.port)
 
 @server.endpoint(path="/test", allowed_methods=["GET"])
-def test_endpoint():
+def test_endpoint(request: Request):
     return Response(status=HTTP_200, headers={}, body="Hello World!")
 
 
@@ -62,3 +63,5 @@ if __name__ == "__main__":
 ```
 
 Test it with ```curl http://localhost:4221/test -i ```
+
+For more examples checkout the sample_server is tst folder
