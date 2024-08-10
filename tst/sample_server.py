@@ -21,7 +21,6 @@ def echo_value(request: Request, value1: str):
 
 @server.endpoint("/query_params", allowed_methods=["GET"])
 def query_params_in_request(request: Request):
-    print(request.query_params)
     return Response(status=HTTP_200, headers={}, body=str(request.query_params))
 
 

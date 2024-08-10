@@ -36,7 +36,7 @@ class Server:
 
             if parameters:
                 params = [p.strip("<>") for p in parameters]
-                regex_endpoint = self.url_replacer.sub("(\\\w+)", path)
+                regex_endpoint = self.url_replacer.sub("(\\\\w+)", path)
 
                 self.regex_function_map[re.compile(regex_endpoint)] = {
                     "function": wrapper,
