@@ -70,7 +70,7 @@ class TestServer(YapiTestCase):
         url = "http://localhost:4221/query_params?a=b&c=d"
         with urlopen(url) as response:
             self.assertEqual(response.getcode(), 200)
-            self.assertEqual(response.read().decode(), "{'a': 'b', 'c': 'd'}")
+            self.assertEqual(response.read().decode(), "{\"a\": \"b\", \"c\": \"d\"}")
 
     def tearDown(self):
         self.process.kill()

@@ -8,7 +8,6 @@ from src.server import Server
 
 server = Server("localhost", 4221)
 
-
 @server.endpoint("/test", allowed_methods=["GET"])
 def endpoint(request: Request):
     return Response(status=HTTP_200, headers={}, body="test")
@@ -21,7 +20,7 @@ def echo_value(request: Request, value1: str):
 
 @server.endpoint("/query_params", allowed_methods=["GET"])
 def query_params_in_request(request: Request):
-    return Response(status=HTTP_200, headers={}, body=str(request.query_params))
+    return JsonResponse(status=HTTP_200, headers={}, body=json.dumps(request.query_params))
 
 
 @server.endpoint("/test_json", allowed_methods=["GET"])
