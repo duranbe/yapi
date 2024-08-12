@@ -5,7 +5,7 @@ from subprocess import Popen
 import time
 import logging
 
-SERVER_START_WAIT_TIME = 0.1
+SERVER_START_WAIT_TIME = 0.05
 
 
 class TestServer(YapiTestCase):
