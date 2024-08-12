@@ -3,6 +3,7 @@ import threading
 import logging
 import re
 
+from src.middleware.logging_middleware import LoggingMiddleware
 from src.request import Request
 from src.response import Response
 from src.response.statuses import HTTP_404, HTTP_405
@@ -12,6 +13,7 @@ class Server:
     def __init__(self, hostname: str, port: int) -> None:
         self.address_function_map = {}
         self.regex_function_map = {}
+        self.middlewares = [LoggingMiddleware]
         self.socket = socket.socket()
         logging.basicConfig(level=logging.INFO)
         logging.getLogger().setLevel(logging.INFO)
@@ -30,7 +32,15 @@ class Server:
     def endpoint(self, path, allowed_methods):
         def decorator(function):
             def wrapper(request, **kwargs):
-                return function(request, **kwargs)
+                for _middleware in self.middlewares:
+                    request = _middleware._request_middleware(request)
+
+                response = function(request, **kwargs)
+
+                for _middleware in self.middlewares:
+                    response = _middleware._response_middleware(request, response)
+
+                return response
 
             parameters = self.url_matcher.findall(path)
 
@@ -60,8 +70,6 @@ class Server:
         while True:
             sock, addr = self.socket.accept()
             request = Request(sock.recv(4096))
-
-            logging.info(f"{request.method} {request.endpoint}")
 
             for compiled_regex in self.regex_function_map.keys():
                 if compiled_regex.search(request.endpoint):

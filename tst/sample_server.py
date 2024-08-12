@@ -20,7 +20,9 @@ def echo_value(request: Request, value1: str):
 
 @server.endpoint("/query_params", allowed_methods=["GET"])
 def query_params_in_request(request: Request):
-    return JsonResponse(status=HTTP_200, headers={}, body=json.dumps(request.query_params))
+    return JsonResponse(
+        status=HTTP_200, headers={}, body=json.dumps(request.query_params)
+    )
 
 
 @server.endpoint("/test_json", allowed_methods=["GET"])
