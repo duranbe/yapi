@@ -72,6 +72,17 @@ class TestServer(YapiTestCase):
             self.assertEqual(response.getcode(), 200)
             self.assertEqual(response.read().decode(), '{"a": "b", "c": "d"}')
 
+    def test_multiple_calls(self):
+        url = "http://localhost:4221/query_params?a=b&c=d"
+        with urlopen(url) as response:
+            self.assertEqual(response.getcode(), 200)
+            self.assertEqual(response.read().decode(), '{"a": "b", "c": "d"}')
+        
+        url = "http://localhost:4221/query_params?b=a&d=c"
+        with urlopen(url) as response:
+            self.assertEqual(response.getcode(), 200)
+            self.assertEqual(response.read().decode(), '{"b": "a", "d": "c"}')
+
     def tearDown(self):
         self.process.kill()
         self.process.wait()
